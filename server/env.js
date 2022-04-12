@@ -1,0 +1,5 @@
+PORT = 8000
+MONGO_URI = mongodb://localhost:27017/newspaper
+SESSION_SECRET = 
+GOOGLE_CLIENT_ID = 
+GOOGLE_CLIENT_SECRET = 

@@ -1,0 +1,17 @@
+
+
+.sidebar-wrapper ul li{
+    padding: 1rem ;
+    border-top: 1px solid #c0c0c0;
+    transition: all .5s ease;
+}
+.sidebar-wrapper ul li:hover{
+    background-color: #e0e0e0;
+}
+.sidebar-wrapper ul li:first-child{
+    border-top: none;
+}
+.sidebar-wrapper ul li a{
+    font-size: 1.6rem;
+}
+
