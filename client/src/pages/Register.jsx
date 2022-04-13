@@ -1,14 +1,32 @@
 import React,{useState} from 'react'
+import axios from 'axios';
 import { FcGoogle } from "react-icons/fc";
 import { AiOutlineEye } from "react-icons/ai";
 import { AiOutlineEyeInvisible } from "react-icons/ai";
+import {Link} from 'react-router-dom'
 import Input from "../components/Input";
 const Register = () => {
+  const [error, setError] = useState('');
+  const [value, setValue] = useState({
+    name:'',
+    email:'',
+    password:'',
+    cpassword:''
+  });
     const [showPassword, setShowPassword] = useState(true);
   const eyeShow = () => {
     setShowPassword(!showPassword);
     
   };
+  const change = (e) => {
+    setValue({...value,[e.target.name]:e.target.value})
+  };
+  const formSubmit = async (e) => {
+    e.preventDefault();
+    const res = await axios.post('/api/v1/user/register',value);
+    setError(res.data.message);
+  };
+  const {name,email,password,cpassword} = value;
   return (
     <>
     <div className="container mx-auto  ">
@@ -22,31 +40,34 @@ const Register = () => {
             <div className="or">
               <button className="uppercase border rounded-full p-4 text-2xl mx-auto flex justify-center " >or</button>
             </div>
-            <form autoComplete="off" className="space-y-4" >
+            <form autoComplete="off" className="space-y-4" onSubmit={formSubmit} >
               <div className="input-field w-10/12 sm:w-6/12 md:4/12 mx-auto ">
-              <Input type='text' name='email' placeholder='Fullname' />
+             {error ? ( <p className='text-center text-3xl font-medium px-4 py-2 h-12 bg-slate-100 text-red-500 rounded-lg ' > {error}  </p> ) : null}
               </div>
               <div className="input-field w-10/12 sm:w-6/12 md:4/12 mx-auto ">
-              <Input type='text' name='email' placeholder='Email' />
+              <Input type='text' name='name' placeholder='Fullname' value={name} change={change} />
+              </div>
+              <div className="input-field w-10/12 sm:w-6/12 md:4/12 mx-auto ">
+              <Input type='text' name='email' placeholder='Email' value={email} change={change} />
               </div>
               <div className="input-field w-10/12 sm:w-6/12 md:4/12  mx-auto relative ">
-              <Input type={showPassword? 'password' : 'text'} name='password' placeholder='Password' />
+              <Input type={showPassword? 'password' : 'text'} name='password' placeholder='Password' value={password} change={change} />
               {
                 showPassword ? (<AiOutlineEyeInvisible className="text-3xl absolute top-4 right-2 " onClick={eyeShow} />) : (<AiOutlineEye className="text-3xl absolute top-4 right-2 " onClick ={eyeShow} />)
               }
               </div>
               <div className="input-field w-10/12 sm:w-6/12 md:4/12  mx-auto relative ">
-              <Input type={showPassword? 'password' : 'text'} name='cpassword' placeholder='Confirm Password' />
+              <Input type={showPassword? 'password' : 'text'} name='cpassword' placeholder='Confirm Password' value={cpassword} change={change} />
               {
                 showPassword ? (<AiOutlineEyeInvisible className="text-3xl absolute top-4 right-2 " onClick={eyeShow} />) : (<AiOutlineEye className="text-3xl absolute top-4 right-2 " onClick ={eyeShow} />)
               }
               </div>
               <div className="input-field w-10/12 sm:w-6/12 md:4/12  mx-auto ">
-              <button className="w-full p-4 bg-red-700 text-white text-3xl ">Register</button>
+              <button className="w-full p-4 bg-red-700 text-white text-3xl focus:bg-rose-800 ">Register</button>
               </div>
             </form>
-            <div className="extra ">
-              <p className='text-center text-2xl capitalize '> you have already a account? <span className=" text-red-700  underline my-3 font-semibold " >Login</span></p>
+            <div className="extra">
+              <p className='text-center text-2xl capitalize '> you have already a account? <Link to='/login' className=" text-red-700  underline my-3 font-semibold " >Login</Link></p>
             </div>
           </div>
       </div>

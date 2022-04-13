@@ -6,7 +6,7 @@ const registerValidation = async (req, res, next) => {
       .min(3)
       .message("username must be bigger than 3")
       .max(15)
-      .message("usernaem must be shorter than 15"),
+      .message("username must be shorter than 15"),
     email: Joi.string()
       // .required()
       // .message("email is required")
@@ -23,7 +23,7 @@ const registerValidation = async (req, res, next) => {
   });
   const { error, value } = Schema.validate(req.body);
   if(error){
-    res.json({
+    res.status(202).json({
       message:error.details[0].message,
       path:error.details[0].path
     })

@@ -4,9 +4,9 @@ import { Link } from "react-router-dom";
 const Sidebar = ({show}) => {
   return (
     <>
-      <section className={`sidebar mt-4 ${show} transition `}>
+      <section className={`sidebar mt-4 ${show} transition absolute bg-white z-10 `}>
         <div className="contianer mx-auto px-10 ">
-          <div className="sidebar-wrapper columns-2 sm:columns-1 sm:max-w-lg  px-4 py-8 ">
+          <div className="sidebar-wrapper columns-2  sm:max-w-3xl  px-4 py-8 ">
             <ul>
               <li>
                 <a>প্রচ্ছদ</a>

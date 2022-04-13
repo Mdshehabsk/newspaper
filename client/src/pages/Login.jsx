@@ -1,14 +1,29 @@
 import React, { useState } from "react";
+import axios from "axios";
 import { FcGoogle } from "react-icons/fc";
 import { AiOutlineEye } from "react-icons/ai";
 import { AiOutlineEyeInvisible } from "react-icons/ai";
 import Input from "../components/Input";
+import { Link } from "react-router-dom";
 const Login = () => {
+  const [error, setError] = useState('');
+  const [value, setValue] = useState({
+    email: "",
+    password: ""
+  });
   const [showPassword, setShowPassword] = useState(true);
   const eyeShow = () => {
     setShowPassword(!showPassword);
-    
   };
+  const change = (e) => {
+    setValue({...value,[e.target.name]:e.target.value})
+  };
+  const formSubmit = async (e) => {
+    e.preventDefault();
+    const res = await axios.post('/api/v1/user/login',value,{withCredentials:true});
+    setError(res.data.message);
+  };
+  const {email,password} = value;
   return (
     <>
       <div className="container mx-auto  ">
@@ -22,12 +37,15 @@ const Login = () => {
             <div className="or">
               <button className="uppercase border rounded-full p-4 text-2xl mx-auto flex justify-center " >or</button>
             </div>
-            <form autoComplete="off" className="space-y-4" >
+            <form autoComplete="off" className="space-y-4" onSubmit={formSubmit} >
+            <div className="input-field w-10/12 sm:w-6/12 md:4/12 mx-auto ">
+             {error ? ( <p className='text-center text-3xl font-medium px-4 py-2 h-12 bg-slate-100 text-red-500 rounded-lg ' > {error}  </p> ) : null}
+              </div>
               <div className="input-field w-10/12 sm:w-6/12 md:4/12 mx-auto ">
-              <Input type='text' name='email' placeholder='Email' />
+              <Input type='text' name='email' placeholder='Email' value={email} change={change} />
               </div>
               <div className="input-field w-10/12 sm:w-6/12 md:4/12  mx-auto relative ">
-              <Input type={showPassword? 'password' : 'text'} name='password' placeholder='Password' />
+              <Input type={showPassword? 'password' : 'text'} name='password' placeholder='Password' value={password} change={change} />
               {
                 showPassword ? (<AiOutlineEyeInvisible className="text-3xl absolute top-4 right-2 " onClick={eyeShow} />) : (<AiOutlineEye className="text-3xl absolute top-4 right-2 " onClick ={eyeShow} />)
               }
@@ -38,7 +56,7 @@ const Login = () => {
             </form>
             <div className="extra ">
               <p className="text-center text-2xl text-blue-600 capitalize " >Forget password</p>
-              <p className='text-center text-2xl capitalize '> If you are new? <span className=" text-red-700  underline my-3 font-semibold " >Create an account</span></p>
+              <p className='text-center text-2xl capitalize '> If you are new? <Link to='/register' className=" text-red-700  underline my-3 font-semibold " >Create an account</Link></p>
             </div>
           </div>
       </div>

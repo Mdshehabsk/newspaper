@@ -5,17 +5,17 @@ const registerController = async (req, res, next) => {
   try {
     const { name, email, password, cpassword } = req.body;
     if (!name || !email || !password || !cpassword) {
-      res.status(400).json({
+      res.status(202).json({
         message: "please fill all the fields",
       });
     } else if (password !== cpassword) {
-      res.status(400).json({
+      res.status(202).json({
         message: "password does not match",
       });
     } else {
       const userExist = await User.findOne({ email });
       if (userExist) {
-        res.status(400).json({
+        res.status(202).json({
           message: "user already exist",
         });
       } else {
@@ -43,19 +43,19 @@ const loginController = async (req, res, next) => {
     try {
         const { email, password } = req.body;
         if (!email || !password) {
-            res.status(400).json({
+            res.status(202).json({
                 message: "please fill all the fields",
             });
         } else {
             const user = await User.findOne({ email });
             if (!user) {
-                res.status(400).json({
+                res.status(202).json({
                     message: "user does not exist",
                 });
             } else {
                 const isMatch = await bcrypt.compare(password, user.password);
                 if (!isMatch) {
-                    res.status(400).json({
+                    res.status(202).json({
                         message: "password does not match",
                     });
                 } else {

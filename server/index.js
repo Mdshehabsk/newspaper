@@ -1,6 +1,7 @@
 require("dotenv").config();
 const express = require("express");
 const morgan = require("morgan");
+const cors = require("cors");
 const passport = require("passport");
 const session = require("express-session");
 const MongoStore = require("connect-mongo");
@@ -11,6 +12,10 @@ const userRoute = require("./router/userRoute");
 const app = express();
 
 app.use(express.json());
+app.use(cors({
+  origin: "http://localhost:3000",
+  credentials: true,
+}))
 app.use(morgan("dev"));
 app.use(passport.initialize());
 const mongoStore = MongoStore.create({
