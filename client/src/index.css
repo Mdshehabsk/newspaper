@@ -13,3 +13,9 @@ html{
     font-size: 62.5%;
 }
 
+@layer components{
+   .google-btn{
+       @apply px-16 mt-4 !important;
+   }
+}
+

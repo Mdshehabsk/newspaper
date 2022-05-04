@@ -1,11 +1,15 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { FcGoogle } from "react-icons/fc";
+import toast, { Toaster } from 'react-hot-toast';
+// import { FcGoogle } from "react-icons/fc";
+import GoogleLogin from "react-google-login";
+import env from "../components/env";
 import { AiOutlineEye } from "react-icons/ai";
 import { AiOutlineEyeInvisible } from "react-icons/ai";
 import Input from "../components/Input";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 const Login = () => {
+  const navigate = useNavigate();
   const [error, setError] = useState('');
   const [value, setValue] = useState({
     email: "",
@@ -22,6 +26,39 @@ const Login = () => {
     e.preventDefault();
     const res = await axios.post('/api/v1/user/login',value,{withCredentials:true});
     setError(res.data.message);
+    res.status === 201 && setTimeout(() => {
+      window.location.href = "/"
+    }, 500);
+  };
+  const responseGoogle = async ({ profileObj }) => {
+    const { name, email, googleId, imageUrl } = profileObj;
+    const res = await axios.post(
+      "/api/v1/user/auth/google",
+      { name, email, googleId, imageUrl },
+      { withCredentials: "true" }
+    );
+    if(res.status === 200){
+      setTimeout(() => {
+        window.location.href = "/"
+      }, 3000);
+    }
+    const bg = res.status === 200 ? '#22b33c' : 'red'
+    toast(res.data.message, {
+      duration: 4000,
+      position: 'top-center',
+      // Styling
+      style: {width:'200px',background:`${bg}`,color:'white',fontSize:'2rem'},
+      className: '',
+      // Custom Icon
+      ariaProps: {
+        role: 'status',
+        'aria-live': 'polite',
+      },
+    });
+
+  };
+  const failureGoogle = (response) => {
+    console.log(response);
   };
   const {email,password} = value;
   return (
@@ -31,8 +68,15 @@ const Login = () => {
             <div className="login-header ">
               <h1 className="text-center text-5xl font-semibold text-red-900 " >Login</h1>
             </div>
-            <div className="google ">
-              <button className="flex items-center text-4xl mx-auto bg-blue-300 p-4 text-white rounded-md " > <FcGoogle/> continue with google</button>
+            <div className="google text-center ">
+            <GoogleLogin
+              className="google-btn "
+              clientId={env.GOOGLE_ID}
+              buttonText="Continue with google"
+              onSuccess={responseGoogle}
+              onFailure={failureGoogle}
+              cookiePolicy={"single_host_origin"}
+            />
             </div>
             <div className="or">
               <button className="uppercase border rounded-full p-4 text-2xl mx-auto flex justify-center " >or</button>
@@ -54,12 +98,13 @@ const Login = () => {
               <button className="w-full p-4 bg-red-700 text-white text-3xl ">Login</button>
               </div>
             </form>
-            <div className="extra ">
+            <div className="extra">
               <p className="text-center text-2xl text-blue-600 capitalize " >Forget password</p>
               <p className='text-center text-2xl capitalize '> If you are new? <Link to='/register' className=" text-red-700  underline my-3 font-semibold " >Create an account</Link></p>
             </div>
           </div>
       </div>
+      <Toaster/>
     </>
   );
 };

@@ -38,7 +38,7 @@ passport.serializeUser(function (user, cb) {
               name: profile.displayName,
               googleId: profile.id,
             });
-            return done('login successfull', newUser);
+            return done(null, newUser);
           }
         } 
       }

@@ -9,7 +9,7 @@ const commonErrorHandler = (err, req, res, next) => {
     }
     if(err){
         if(err.status===405){
-            res.send('Email already exist')
+            res.redirect('http://localhost:3000/googlelogin');
         }
         if(err.message){
             res.status(err.status || 400).json(err.message)

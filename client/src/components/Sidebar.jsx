@@ -3,11 +3,12 @@ import { Link } from "react-router-dom";
 
 const Sidebar = ({show}) => {
   return (
+                
     <>
-      <section className={`sidebar mt-4 ${show} transition absolute bg-white z-10 `}>
+      <section className={`sidebar mt-4 ${show} transition absolute bg-white z-10 p-8 `}>
         <div className="contianer mx-auto px-10 ">
-          <div className="sidebar-wrapper columns-2  sm:max-w-3xl  px-4 py-8 ">
-            <ul>
+          <div className="sidebar-wrapper w-96 flex flex-wrap justify-between ">
+            <ul className="w-44">
               <li>
                 <a>প্রচ্ছদ</a>
               </li>
@@ -44,7 +45,7 @@ const Sidebar = ({show}) => {
                 <a>ই-পেপার</a>
               </li>
             </ul>
-            <ul >
+            <ul className="w-44">
               <li>
                 <a>সর্বশেষ সংবাদ</a>
               </li>

@@ -5,7 +5,7 @@ const isAuth = (req, res, next) => {
         req._id = req.session.user._id;
         next();
     } else {
-        res.status(401).json({
+       return res.status(202).json({
             message: "please login first"
         })
     }

@@ -5,17 +5,17 @@ const registerController = async (req, res, next) => {
   try {
     const { name, email, password, cpassword } = req.body;
     if (!name || !email || !password || !cpassword) {
-      res.status(202).json({
+     return res.status(200).json({
         message: "please fill all the fields",
       });
     } else if (password !== cpassword) {
-      res.status(202).json({
+     return res.status(200).json({
         message: "password does not match",
       });
     } else {
       const userExist = await User.findOne({ email });
       if (userExist) {
-        res.status(202).json({
+       return res.status(200).json({
           message: "user already exist",
         });
       } else {
@@ -27,7 +27,7 @@ const registerController = async (req, res, next) => {
           cpassword: hastCpassword,
         });
         await user.save();
-        res.status(201).json({
+       return res.status(201).json({
           message: "user created successfully",
         });
       }
@@ -36,64 +36,105 @@ const registerController = async (req, res, next) => {
     next(createError(500, err));
   }
 };
-
-
-
-const loginController = async (req, res, next) => {
-    try {
-        const { email, password } = req.body;
-        if (!email || !password) {
-            res.status(202).json({
-                message: "please fill all the fields",
-            });
-        } else {
-            const user = await User.findOne({ email });
-            if (!user) {
-                res.status(202).json({
-                    message: "user does not exist",
-                });
-            } else {
-                const isMatch = await bcrypt.compare(password, user.password);
-                if (!isMatch) {
-                    res.status(202).json({
-                        message: "password does not match",
-                    });
-                } else {
-                  const {_id, name, email, usertype,modelName} = user;
-                  req.session.user= {
-                    _id,
-                    name,
-                    email,
-                    usertype,
-                    modelName
-                }
-                    req.session.Auth = true;
-                    res.status(200).json({
-                        message: "login successfully",
-                    });
-
-                }
-            }
-        }
-    } catch (err) {
-        next(createError(500, err));
+const authGoogle = async (req,res,next) => {
+  const {name,email,googleId,imageUrl} = req.body;
+  const userExist = await User.findOne({ email });
+  const googleIdExist = await User.findOne({googleId})
+  if(googleIdExist){
+    const {usertype} = googleIdExist
+    req.session.user = {
+      name,
+      email,
+      googleId,
+      usertype,
+    };
+    req.session.Auth = true;
+   return res.status(200).json({message:'login successfull'})
+  }
+  else{
+    if(userExist){
+      return res.status(202).json({message:'user already exist'})
+    } else{
+      const user = new User({
+        name,
+        email,
+        googleId,
+        imageUrl
+      })
+      await user.save()
+      req.session.user = {
+        name,
+        email,
+        googleId,
+        usertype:"user",
+      };
+      req.session.Auth = true;
+      return res.status(200).json({message:'login successfully'})
     }
+  }
+
+}
+const loginController = async (req, res, next) => {
+  try {
+    const { email, password } = req.body;
+    if (!email || !password) {
+      res.status(202).json({
+        message: "please fill all the fields",
+      });
+    } else {
+      const user = await User.findOne({ email });    
+      if (!user) {
+        res.status(202).json({
+          message: "user does not exist",
+        });
+      } else {
+        if(user.googleId){
+          res.status(200).json({
+            message: "please login with google",
+          });
+        }else{
+          const isMatch = await bcrypt.compare(password, user.password);
+          if (!isMatch) {
+            res.status(200).json({
+              message: "password does not match",
+            });
+          } else {
+            const { _id, name, email, usertype, modelName } = user;
+            req.session.user = {
+              _id,
+              name,
+              email,
+              usertype,
+              modelName,
+            };
+            req.session.Auth = true;
+            res.status(201).json({
+              message: "login successfully",
+            });
+          }
+        }
+       
+      }
+    }
+  } catch (err) {
+    next(createError(500, err));
+  }
 };
 
 const logoutController = async (req, res, next) => {
-    try {
-        req.session.destroy();
-        res.status(200).json({
-            message: "logout successfully",
-        });
-    } catch (err) {
-        next(createError(500, err));
-    }
+  try {
+    req.session.destroy();
+    res.status(200).json({
+      message: "logout successfully",
+    });
+  } catch (err) {
+    next(createError(500, err));
+  }
 };
-
 
 module.exports = {
   registerController,
   loginController,
-  logoutController
+  authGoogle,
+  logoutController,
 };

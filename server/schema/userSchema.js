@@ -24,6 +24,10 @@ const userSchema = new Schema({
         enum:['user','moderator','admin','superadmin'],
         default:'user'
     },
+    imageUrl:{
+        type:String,
+        default: 'images.png'
+    },
     posts:[{
         type: Schema.Types.ObjectId,
         ref: 'Post'

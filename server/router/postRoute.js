@@ -1,15 +1,16 @@
 const { newsController } = require('../controller/postController');
 const isAuth = require('../middleware/checkAuth');
 const Post = require('../schema/postSchema');
+const postValidation = require('../validation/postValidation');
 
 const router = require('express').Router();
 
 
-router.get('/',isAuth, async (req, res) => {
+router.get('/', async (req, res) => {
     const post = await Post.find().populate('user');
-    res.json(post);
+    res.status(200).json(post);
 })
-router.post('/news',isAuth,newsController)
+router.post('/news',isAuth,postValidation,newsController)
 
 
 
