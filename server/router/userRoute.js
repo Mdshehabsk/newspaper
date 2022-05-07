@@ -1,34 +1,53 @@
-const passport = require("passport");
+// const passport = require("passport");
+const imageUpload = require("../controller/imageUploader");
 const router = require("express").Router();
 
 const {
   registerController,
   loginController,
   logoutController,
+  profileUpdateController,
   authGoogle,
+  registerVerification,
+  forgetPassword,
+  resetPassword,
 } = require("../controller/userController");
 const isAuth = require("../middleware/checkAuth");
 const User = require("../schema/userSchema");
 const registerValidation = require("../validation/registerValidation");
-router.get("/", isAuth, async (req, res) => {
-  const {_id , googleId} = req.session.user
+router.get("/", isAuth, async (req, res,next) => {
+  try{
+    const {_id , googleId} = req.session.user
   if(_id){
     const user = await User.findById(_id)
-    const {email,imageUrl} = user;
-    res.json({email,imageUrl})
+    const {email,imageUrl,name} = user;
+    const hostname = req.protocol + "://" + req.get("host");
+    res.json({name,email,imageUrl:`${hostname}/${imageUrl}`,user:true})
   }
   if(googleId){
     const user = await User.findOne({googleId})
-    const {email,imageUrl} = user;
-    res.json({email,imageUrl})
+    const {email,imageUrl,name,updateCount} = user;
+    const hostname = req.protocol + "://" + req.get("host");
+    if(updateCount === 0){
+      res.json({name,email,imageUrl,user:true})
+    }else{
+      res.json({name,email,imageUrl:`${hostname}/${imageUrl}`,user:true})
+    }
+  }
+  }catch(err){
+    next(err)
   }
 });
 
 //custom registraiton and login route
-router.post("/register", registerValidation, registerController);
+router.post("/register",registerValidation,  registerController);
+router.post('/registerVerification',registerVerification)
 router.post('/auth/google',authGoogle)
 router.post("/login", loginController);
-router.get("/logout", logoutController);
+router.post('/forgetpassword',forgetPassword)
+router.post('/resetpassword',resetPassword)
+router.put('/profile/update',isAuth,imageUpload.single('avatar'),profileUpdateController)
+router.get("/logout",isAuth, logoutController);
 //google auth route
 // require("../passport/passportAuth");
 // router.get(

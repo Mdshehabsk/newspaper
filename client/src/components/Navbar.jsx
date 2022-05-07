@@ -11,8 +11,7 @@ import SearchBox from "./SearchBox";
 import axios from "axios";
 const Navbar = () => {
   const navigate = useNavigate();
-  const [user,setUser] = useState(null)
-  const [image,setImage] = useState(null)
+  const [data,setData] = useState([])
   const [showSidebar, setShowSidebar] = useState(false);
   const [showSearch, setShowSearch] = useState(false);
   const fontStyle = { fontSize: "2.5rem", cursor: "pointer" };
@@ -23,10 +22,9 @@ const Navbar = () => {
     setShowSearch(!showSearch);
   };
   const apicall = async () => {
-    const res = await axios.get('/userAuth',{withCredentials:'true'})
+    const res = await axios.get('/api/v1/user',{withCredentials:'true'})
     const {imageUrl,user} = res.data
-    setUser(user)
-    setImage(imageUrl)
+    setData({imageUrl,user})
   }
   useEffect(()=>{
     apicall()
@@ -42,10 +40,10 @@ const Navbar = () => {
               {showSearch ? (<SearchBox />) : null}
             </div>
             <div className="middle">
-              <h1 className="text-5xl font-bold text-rose-800"><Link to='/' >প্রথমসংবাদ</Link></h1>
+              <h1 className="text-4xl md:text-6xl font-bold text-rose-800"><Link to='/' >প্রথমসংবাদ</Link></h1>
             </div>
             <div className="right flex  ">
-              {user ? (<Link to='/profile' ><img className="w-16 h-16 rounded-full " src={image} alt="no image" /></Link>) : <Link to='/login' > <AiOutlineUser style={fontStyle} /> </Link>}
+              {data.user ? (<Link to='/profile' ><img className="w-16 h-16 rounded-full ring-2  " src={data.imageUrl} alt="no image" /></Link>) : <Link to='/login' > <AiOutlineUser style={fontStyle} /> </Link>}
             </div>
           </div>
         </div>

@@ -28,6 +28,10 @@ const userSchema = new Schema({
         type:String,
         default: 'images.png'
     },
+    updateCount:{
+        type:Number,
+        default:0
+    },
     posts:[{
         type: Schema.Types.ObjectId,
         ref: 'Post'

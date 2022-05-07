@@ -8,9 +8,7 @@ const commonErrorHandler = (err, req, res, next) => {
         console.log('headers already sent');
     }
     if(err){
-        if(err.status===405){
-            res.redirect('http://localhost:3000/googlelogin');
-        }
+        console.log(err.message);
         if(err.message){
             res.status(err.status || 400).json(err.message)
         }else{

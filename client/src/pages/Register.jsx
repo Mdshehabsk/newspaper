@@ -7,15 +7,17 @@ import toast, { Toaster } from 'react-hot-toast';
 import { Link, useNavigate } from "react-router-dom";
 import env from "../components/env";
 import Input from "../components/Input";
-
+import RegisterVerify from "../components/RegisterVerify";
 const Register = () => {
   const navigate = useNavigate();
+  const [showVerify, setShowVerify] = useState(false);
   const [error, setError] = useState("");
   const [value, setValue] = useState({
     name: "",
     email: "",
     password: "",
     cpassword: "",
+    code: "",
   });
   const [showPassword, setShowPassword] = useState(true);
   const eyeShow = () => {
@@ -26,16 +28,15 @@ const Register = () => {
   };
   const formSubmit = async (e) => {
     e.preventDefault();
-    const res = await axios.post("api/v1/user/register", value);
+    const res = await axios.post("api/v1/user/register", {name,email,password,cpassword});
+    console.log(res)
     if (res.data.message) {
       setError(res.data.message);
     } else {
       setError("");
     }
     if (res.status === 201) {
-      setTimeout(() => {
-        navigate("/login");
-      }, 1500);
+      setShowVerify(true);
     }
   };
   const responseGoogle = async ({ profileObj }) => {
@@ -68,8 +69,29 @@ const Register = () => {
   const failureGoogle = (response) => {
     console.log(response);
   };
+  const verify = async ()  =>{
+    const res = await axios.post('api/v1/user/registerVerification',{code},{withCredentials:true})
+    if(res.status === 201){
+      setTimeout(() => {
+        navigate("/login")
+      }, 3000);
+    }
+    const bg = res.status === 200 ?  'red' :'#22b33c'
+    toast(res.data.message, {
+      duration: 3000,
+      position: 'top-center',
+      // Styling
+      style: {width:'200px',background:`${bg}`,color:'white',fontSize:'2rem'},
+      className: '',
+      // Custom Icon
+      ariaProps: {
+        role: 'status',
+        'aria-live': 'polite',
+      },
+    });
 
-  const { name, email, password, cpassword } = value;
+  }
+  const { name, email, password, cpassword ,code} = value;
   return (
     <>
       <div className="container mx-auto  ">
@@ -98,8 +120,7 @@ const Register = () => {
             <div className="input-field w-10/12 sm:w-6/12 md:4/12 mx-auto ">
               {error ? (
                 <p className="text-center text-3xl font-medium px-4 py-2 h-12 bg-slate-100 text-red-500 rounded-lg ">
-                  {" "}
-                  {error}{" "}
+                  {error}
                 </p>
               ) : null}
             </div>
@@ -167,10 +188,10 @@ const Register = () => {
               </button>
             </div>
           </form>
+            {showVerify ? <RegisterVerify Input={Input} code={code} change={change} onClick={verify} /> : null}
           <div className="extra">
             <p className="text-center text-2xl capitalize ">
-              {" "}
-              you have already a account?{" "}
+              you have already a account?
               <Link
                 to="/login"
                 className=" text-red-700  underline my-3 font-semibold "
