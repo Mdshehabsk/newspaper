@@ -15,6 +15,7 @@ const {
 const isAuth = require("../middleware/checkAuth");
 const User = require("../schema/userSchema");
 const registerValidation = require("../validation/registerValidation");
+const resetPasswordValidation = require("../validation/resetPasswordValidation");
 router.get("/", isAuth, async (req, res,next) => {
   try{
     const {_id , googleId} = req.session.user
@@ -45,7 +46,7 @@ router.post('/registerVerification',registerVerification)
 router.post('/auth/google',authGoogle)
 router.post("/login", loginController);
 router.post('/forgetpassword',forgetPassword)
-router.post('/resetpassword',resetPassword)
+router.post('/resetpassword',resetPasswordValidation,resetPassword)
 router.put('/profile/update',isAuth,imageUpload.single('avatar'),profileUpdateController)
 router.get("/logout",isAuth, logoutController);
 //google auth route

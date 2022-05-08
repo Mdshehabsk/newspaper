@@ -13,6 +13,7 @@ const userAuth = require('./auth/userAuth')
 const app = express();
 
 app.use(express.json());
+app.set('view engine', 'ejs');
 app.use(express.static(`${__dirname}/public`))
 app.use(cors({
   origin: "http://localhost:3000",
@@ -34,7 +35,7 @@ app.use(session({
   },
 }))
 app.get('/', (req, res) => {
-    res.send('home route')
+    res.render('index',{code:12345})
 });
 
 app.use('/api/v1/post',postRoute)

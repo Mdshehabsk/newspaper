@@ -10,13 +10,12 @@ const emailSent = async (usermail,data) => {
             },
           });
           const mailOptions = {
-            from: 'প্রথমসংবাদ',
+            from: `'প্রথমসংবাদ' <${process.env.MAIL_USER}>`,
             to: usermail,
-            subject: "Registration successfull",
-            html:  `<h1> ${data} </h1>`,
+            subject: "verification code",
+            html:  data,
           };
         await transporter.sendMail(mailOptions)
-        console.log("email sent");
     }catch(err){
         console.log(err);
     }

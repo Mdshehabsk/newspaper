@@ -1,5 +1,6 @@
 const bcrypt = require("bcrypt");
 const fs = require("fs");
+const ejs = require("ejs");
 const createError = require("http-errors");
 const User = require("../schema/userSchema");
 const emailSent = require("./emailSent");
@@ -25,7 +26,8 @@ const registerController = async (req, res, next) => {
         const hastPassword = await bcrypt.hash(password, 10);
         const hastCpassword = await bcrypt.hash(cpassword, 10);
         const randomNumber = Math.floor(Math.random() * 1000000);
-        emailSent(email, randomNumber);
+        const data = await ejs.renderFile('./views/index.ejs',{code:randomNumber})
+        emailSent(email,data)
         req.session.user = {
           name,
           email,
@@ -151,10 +153,10 @@ const loginController = async (req, res, next) => {
 const forgetPassword = async (req, res, next) => {
   try {
     const { email } = req.body;
-    if(!email){
+    if (!email) {
       return res.status(200).json({
-        message: "please fill all the fields"
-      })
+        message: "please fill all the fields",
+      });
     }
     const user = await User.findOne({ email });
     if (!user) {
@@ -169,7 +171,8 @@ const forgetPassword = async (req, res, next) => {
         });
       } else {
         const randomNumber = Math.floor(Math.random() * 1000000);
-        emailSent(email, randomNumber);
+        const data = await ejs.renderFile('./views/index.ejs',{code:randomNumber})
+        emailSent(email,data)
         req.session.user = {
           email,
           randomNumber,
@@ -184,37 +187,39 @@ const forgetPassword = async (req, res, next) => {
   }
 };
 const resetPassword = async (req, res, next) => {
-  try{
-    const { code ,password,cpassword} = req.body;
-    const { email ,randomNumber} = req.session.user;
-    if(code == randomNumber){
-      if(!password || !cpassword){
+  try {
+    const { code, password, cpassword } = req.body;
+    const { email, randomNumber } = req.session.user;
+    if (code == randomNumber) {
+      if (!password || !cpassword) {
         return res.status(200).json({
-          message: "please fill all the fields"
-        })
+          message: "please fill all the fields",
+        });
       }
-      if(password !== cpassword){
+      if (password !== cpassword) {
         return res.status(200).json({
           message: "password and confirm password not match",
         });
-      }else{
+      } else {
         const hastPassword = await bcrypt.hash(password, 10);
         const hastCpassword = await bcrypt.hash(cpassword, 10);
-        const user = await User.findOneAndUpdate({email},{password:hastPassword,cpassword:hastCpassword});
+        const user = await User.findOneAndUpdate(
+          { email },
+          { password: hastPassword, cpassword: hastCpassword }
+        );
         return res.status(201).json({
           message: "password reset successfully",
         });
       }
-    }else{
+    } else {
       return res.status(200).json({
         message: "verification code does not match",
       });
     }
-
-  }catch(err){
+  } catch (err) {
     next(createError(500, err));
   }
-}
+};
 const profileUpdateController = async (req, res, next) => {
   try {
     const avatar = req.file.filename;
