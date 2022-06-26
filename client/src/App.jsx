@@ -9,14 +9,18 @@ import NotFound from "./pages/NotFound";
 import Profile from "./pages/profile";
 import Register from "./pages/Register";
 import ForgetPassword from "./pages/forgetPassword";
+import Dashboard from './pages/dashboard'
+import DashboardIcon from "./components/DashboardIcon";
 import axios from "axios";
 import {useState, useEffect } from "react";
 
 function App() {
-  const [user, setUser] = useState([]);
+  const [user, setUser] = useState(false);
+  const [dashboard,setDashboard] = useState(false);
   const apicall = async () => {
-    const res = await axios.get("/userAuth", { withCredentials: true });
+    const res = await axios.get("/api/v1/roleauth", { withCredentials: true });
     setUser(res.data.user);
+    setDashboard(res.data.dashboard);
   }
   useEffect(()=>{
     apicall()
@@ -30,8 +34,10 @@ function App() {
         <Route path="/register" element={<Register />} />
         {!user ? <Route path="/forgetPassword" element={<ForgetPassword />} /> : null }
         <Route path="/allitems/:id" element={<AllItems />} />
+        {dashboard ? <Route path="/dashboard/*" element={<Dashboard />} /> : null }
         <Route path="*" element={<NotFound />} />
       </Routes>
+      {dashboard ? <DashboardIcon/> : null}
       <Footer/>
     </>
   );

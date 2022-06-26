@@ -7,13 +7,20 @@ const postSchema = new Schema({
     type: String,
     required: true,
   },
-  content: {
+  description: {
     type: String,
     required: true,
   },
   image: {
     type: String,
+    require:true
   },
+  category:[
+    {
+      type:String,
+      require:true
+    }
+  ],
   user: {
     type: Schema.Types.ObjectId,
     ref: "User",

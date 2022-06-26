@@ -29,7 +29,6 @@ const Register = () => {
   const formSubmit = async (e) => {
     e.preventDefault();
     const res = await axios.post("api/v1/user/register", {name,email,password,cpassword});
-    console.log(res)
     if (res.data.message) {
       setError(res.data.message);
     } else {

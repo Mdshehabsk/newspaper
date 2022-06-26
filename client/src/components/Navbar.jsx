@@ -39,16 +39,16 @@ const Navbar = () => {
               <FiSearch className="ml-8" style={fontStyle} onClick={searchShow} />
               {showSearch ? (<SearchBox />) : null}
             </div>
-            <div className="middle">
+            <div className="middle  ">
               <h1 className="text-4xl md:text-6xl font-bold text-rose-800"><Link to='/' >প্রথমসংবাদ</Link></h1>
             </div>
-            <div className="right flex  ">
-              {data.user ? (<Link to='/profile' ><img className="w-16 h-16 rounded-full ring-2  " src={data.imageUrl} alt="no image" /></Link>) : <Link to='/login' > <AiOutlineUser style={fontStyle} /> </Link>}
+            <div className="right flex items-center ">
+              {data.user ? (<Link to='/profile' ><img className=" w-12 h-12 md:w-16 md:h-16 rounded-full ring-2  " src={data.imageUrl} alt="no image" /></Link>) : <Link to='/login' > <AiOutlineUser style={fontStyle} /> </Link>}
             </div>
           </div>
         </div>
       </nav>
-      <Sidebar show={showSidebar ? "block" :'hidden' }/>
+      <Sidebar show={showSidebar ? "block" :'hidden' } />
     </>
   );
 };

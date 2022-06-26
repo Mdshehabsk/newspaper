@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-const Sidebar = ({show}) => {
+const Sidebar = ({show,dashboard}) => {
   return (
                 
     <>
@@ -78,6 +78,7 @@ const Sidebar = ({show}) => {
               </li>
             </ul>
           </div>
+          
         </div>
       </section>
     </>
