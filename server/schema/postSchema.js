@@ -7,29 +7,28 @@ const postSchema = new Schema({
     type: String,
     required: true,
   },
-  content: {
+  description: {
     type: String,
     required: true,
   },
   image: {
     type: String,
+    require:true
   },
+  category:[
+    {
+      type:String,
+      require:true
+    }
+  ],
   user: {
     type: Schema.Types.ObjectId,
     ref: "User",
   },
-  createdAt: {
-    type: Object,
-    default: {
-      date:
-        new Date().getDate() +
-        "/" +
-        (new Date().getMonth() + 1) +
-        "/" +
-        new Date().getFullYear(),
-      time: new Date().getHours() + ":" + new Date().getMinutes(),
-    },
-  },
+  createdAt:{
+    type:Date,
+    default:Date.now()
+  }
 });
 const Post = mongoose.model("Post", postSchema);
 

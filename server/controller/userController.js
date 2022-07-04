@@ -236,11 +236,9 @@ const profileUpdateController = async (req, res, next) => {
       }
     }
     if (googleId) {
-      let count = 0;
-      count = count + 1;
       const user = await User.findOneAndUpdate(
         { googleId },
-        { imageUrl: avatar, updateCount: count }
+        { imageUrl: avatar, updateCount: 1 }
       );
       const { imageUrl: deleteImage } = user;
       if (deleteImage === "images.png") {

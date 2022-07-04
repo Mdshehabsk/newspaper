@@ -1,5 +1,6 @@
 require("dotenv").config();
 const express = require("express");
+const formData = require('express-form-data')
 const morgan = require("morgan");
 const cors = require("cors");
 // const passport = require("passport");
@@ -9,9 +10,9 @@ const connect = require("./db/connection");
 const { notFound, commonErrorHandler } = require("./middleware/errorhandler");
 const postRoute = require("./router/postRoute");
 const userRoute = require("./router/userRoute");
-const userAuth = require('./auth/userAuth')
+const roleAuth = require('./auth/roleAuth')
 const app = express();
-
+// app.use(formData.stream())
 app.use(express.json());
 app.set('view engine', 'ejs');
 app.use(express.static(`${__dirname}/public`))
@@ -40,8 +41,7 @@ app.get('/', (req, res) => {
 
 app.use('/api/v1/post',postRoute)
 app.use('/api/v1/user',userRoute)
-app.use('/',userAuth)
-
+app.use('/api/v1/roleauth',roleAuth)
 
 //error hander 
 app.use(notFound)

@@ -21,7 +21,6 @@ const userSchema = new Schema({
     },
     usertype:{
         type:String,
-        enum:['user','moderator','admin','superadmin'],
         default:'user'
     },
     imageUrl:{
