@@ -1,4 +1,4 @@
-const { newPost, singlepost, categoryPost } = require('../controller/postController');
+const { newPost, singlepost, categoryPost, postImage } = require('../controller/postController');
 const postImageUpload = require('../controller/postImageUpload');
 const isAdmin = require('../middleware/checkAdminAuth');
 const isAuth = require('../middleware/checkAuth');
@@ -14,7 +14,8 @@ router.get('/', async (req, res) => {
 })
 router.get('/:category',categoryPost)
 router.get('/:category/singlepost/:postid',singlepost)
-router.post('/news',isAuth,isAdmin,postImageUpload.single('postImage'),newPost)
+router.post('/news',isAuth,isAdmin,newPost)
+router.post('/postimage',isAuth,isAdmin,postImage)
 
 
 

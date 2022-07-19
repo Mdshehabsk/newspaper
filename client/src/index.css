@@ -19,3 +19,11 @@ html{
    }
 }
 
+.jodit-status-bar {
+    display: none !important;
+}
+
+.jodit-react-container{
+    font-size: 16px;
+}
+

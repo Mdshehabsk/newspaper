@@ -9,7 +9,7 @@ const Item = ( {title,description,image,unique,category,createdAt} ) => {
     <>
 
       <div className="item  h-[30rem] py-2 px-4 flex flex-col justify-center shadow-lg overflow-y-hidden cursor-pointer ">
-          <img src={image ? `${image}`: img} alt="" className="h-2/4 w-full object-cover " />
+          <img src={image ? `${image[0]}`: img} alt="" className="h-2/4 w-full object-cover " />
           <div className="title mt-2 ">
               <h2 className="text-3xl font-bold" > {title.substring(0,50)}...</h2>
           </div>

@@ -19,7 +19,7 @@ const SinglePost = () => {
     },[postid])
     useEffect(()=>{
       categoryPostApicall()
-    })
+    },[])
 
   return (
     <>
@@ -27,8 +27,9 @@ const SinglePost = () => {
       <div className="flex flex-wrap mt-24">
         <div className="basis-full md:basis-3/4 px-4">
           <h1 className='text-4xl lg:text-6xl font-semibold ' > {singlepost.title} </h1>
-          <img className='my-8 text-center ' src={`${singlepost.image}`} alt="" />
-          <p className='text-2xl md:text-4xl lg:max-w-[90%] tracking-wider leading-snug ' >{singlepost.description}</p>
+          {/* <img className='my-8 text-center ' src={`${singlepost.image}`} alt="" />
+          <p className='text-2xl md:text-4xl lg:max-w-[90%] tracking-wider leading-snug ' >{singlepost.description}</p> */}
+        <div className='mt-20 md:mt-26' dangerouslySetInnerHTML={{__html:singlepost.text}} ></div>
         </div>
         <div className="basis-full md:basis-1/4 flex flex-wrap md:block ">
             {

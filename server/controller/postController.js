@@ -1,14 +1,15 @@
 const createError = require("http-errors");
-
+const formidable = require('formidable')
+const path = require('path')
+const fs = require('fs')
 const Post = require("../schema/postSchema");
 const newPost = async (req, res, next) => {
   try {
-    const { title, description,category } = req.body;
-    const file = req.file;
-    let postImage;
-    if (file) {
-      postImage = file.filename;
-    }
+    const form = formidable({multiples:true})
+    form.parse(req,async (err,field,files)=>{
+
+      const { title, description,category,postImage,text } = field;
+      console.log(postImage)
     if (!title || !description || !postImage ||!category ) {
       res.status(201).json({
         message: "please fill all the fields",
@@ -23,6 +24,7 @@ const newPost = async (req, res, next) => {
         title,
         description,
         image: `/post/${postImage}`,
+        text,
         category:category.split(','),
         user: req._id,
       });
@@ -31,10 +33,41 @@ const newPost = async (req, res, next) => {
         message: "post created successfully",
       });
     }
+    })
+    
   } catch (err) {
     next(createError(500, err));
   }
 };
+// post image 
+const postImage = async (req,res) => {
+  const form = formidable({multiples:true})
+  form.parse(req,async (err,field,files)=> {
+    const imageArr = []
+    if(Array.isArray(files.postImage)){
+      for(const i in files.postImage){
+        const oldPath = files.postImage[i].filepath
+        const base = path.join(__dirname, '../')
+        const imageName = Date.now() + Math.floor(Math.random() * 2 ) + files.postImage[i].originalFilename
+        const newPath = `${base}/public/post/${imageName}`
+        const rawdata = fs.readFileSync(oldPath)
+        fs.writeFileSync(newPath,rawdata)
+        imageArr[i] = imageName
+      }
+    }
+    else{
+      const oldPath = files.postImage.filepath
+      const base = path.join(__dirname, '../')
+      const imageName = Date.now() + Math.floor(Math.random() * 2 ) + files.postImage.originalFilename
+      const newPath = `${base}/public/post/${imageName}`
+      const rawdata = fs.readFileSync(oldPath)
+      fs.writeFileSync(newPath,rawdata)
+      imageArr[0] = imageName
+    }
+    res.status(200).json({image:imageArr})
+  })
+}
+
 //single post 
 
 const singlepost = async (req,res,next) =>{
@@ -60,6 +93,7 @@ const categoryPost = async (req,res,next) =>{
 }
 module.exports = {
   newPost,
+  postImage,
   singlepost,
   categoryPost
 };

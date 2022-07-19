@@ -1,12 +1,16 @@
 import axios from "axios";
-import { useState } from "react";
+import JoditEditor from "jodit-react";
+import { useRef, useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
 import Checkbox from "../../components/Checkbox";
 const NewPost = () => {
-  const [check,setCheck] = useState({
-    checkedArr:[]
-  })
+  const editor = useRef(null);
+  const [check, setCheck] = useState({
+    checkedArr: [],
+  });
+  const [showImage,setShowImage] = useState([])
   const [image, setImage] = useState(null);
+  const [text,setText] = useState('')
   const [value, setValue] = useState({
     title: "",
     description: "",
@@ -16,30 +20,36 @@ const NewPost = () => {
   };
 
   const imageUpload = async (e) => {
-    const file = e.target.files[0];
-    setImage(file);
+    const file = e.target.files;
+    const ImageForm = new FormData()
+    for(const i in file) {
+      ImageForm.append('postImage',file[i])
+    }
+    const res = await axios.post('/api/v1/post/postimage',ImageForm)
+    setShowImage(res.data.image)
   };
 
   const checkboxChange = (e) => {
-    const {value,checked} = e.target
-    const {checkedArr} = check
-    if(checked){
+    const { value, checked } = e.target;
+    const { checkedArr } = check;
+    if (checked) {
       setCheck({
-        checkedArr :[...checkedArr,value]
-      })
-    }else{
+        checkedArr: [...checkedArr, value],
+      });
+    } else {
       setCheck({
-        checkedArr : checkedArr.filter(e=>e !== value)
-      })
+        checkedArr: checkedArr.filter((e) => e !== value),
+      });
     }
   };
   const formSubmit = async (e) => {
     e.preventDefault();
     const formData = new FormData();
-    formData.append("postImage", image);
     formData.append("title", title);
     formData.append("description", description);
-    formData.append('category',check.checkedArr)
+    formData.append('text',text)
+    formData.append('postImage',showImage)
+    formData.append("category", check.checkedArr);
     const res = await axios.post("/api/v1/post/news", formData, {
       withCredentials: true,
     });
@@ -96,37 +106,45 @@ const NewPost = () => {
                 className="p-4 border border-gray-400 outline-none focus:ring-1 focus:ring-gray-500 text-3xl w-full h-[20rem] "
               ></textarea>
             </div>
+              <JoditEditor
+                ref={editor}
+                value={text}
+                onChange = {e => setText(e) }
+              />
+
             <div className="input-field flex flex-col md:flex-row md:items-center space-y-4 md:space-y-0 my-8 ">
               <label htmlFor="image" className="text-3xl md:w-[15rem]">
                 Image :
               </label>
               <input
                 type="file"
+                multiple
                 name="postImage"
                 id="image"
                 className="text-3xl"
                 onChange={imageUpload}
               />
             </div>
+            {showImage.length > 0 ? showImage.map(n => <span className="text-3xl text-center my-2 " > {`http://localhost:8000/post/${n}`} </span> ) : null }
             <div className="input-field flex flex-col md:flex-row md:items-center space-y-4 md:space-y-0 my-8 ">
               <label htmlFor="category" className="text-3xl md:w-[15rem]">
                 Category :
               </label>
               <div className="flex flex-wrap space-x-4 w-full">
-                <Checkbox name="রাজনীতি" change={checkboxChange}   />
-                <Checkbox name="বিনোদন" change={checkboxChange}   />
-                <Checkbox name="করোনাভাইরাস" change={checkboxChange}   />
-                <Checkbox name="বাংলাদেশ" change={checkboxChange}   />
-                <Checkbox name="বিশ্ব" change={checkboxChange}   />
-                <Checkbox name="বানিজ্য" change={checkboxChange}   />
-                <Checkbox name="মতামত" change={checkboxChange}   />
-                <Checkbox name="খেলা" change={checkboxChange}   />
-                <Checkbox name="লাইফস্টাইল" change={checkboxChange}   />
-                <Checkbox name="জীবনযাপন" change={checkboxChange}   />
-                <Checkbox name="স্বাস্থ্য" change={checkboxChange}   />
-                <Checkbox name="ফিচার" change={checkboxChange}   />
-                <Checkbox name="শিক্ষা" change={checkboxChange}   />
-                <Checkbox name="চাকরি" change={checkboxChange}   />
+                <Checkbox name="রাজনীতি" change={checkboxChange} />
+                <Checkbox name="বিনোদন" change={checkboxChange} />
+                <Checkbox name="করোনাভাইরাস" change={checkboxChange} />
+                <Checkbox name="বাংলাদেশ" change={checkboxChange} />
+                <Checkbox name="বিশ্ব" change={checkboxChange} />
+                <Checkbox name="বানিজ্য" change={checkboxChange} />
+                <Checkbox name="মতামত" change={checkboxChange} />
+                <Checkbox name="খেলা" change={checkboxChange} />
+                <Checkbox name="লাইফস্টাইল" change={checkboxChange} />
+                <Checkbox name="জীবনযাপন" change={checkboxChange} />
+                <Checkbox name="স্বাস্থ্য" change={checkboxChange} />
+                <Checkbox name="ফিচার" change={checkboxChange} />
+                <Checkbox name="শিক্ষা" change={checkboxChange} />
+                <Checkbox name="চাকরি" change={checkboxChange} />
               </div>
             </div>
             <div className="input-field flex flex-col md:flex-row md:items-center space-y-4 md:space-y-0 my-8 ">

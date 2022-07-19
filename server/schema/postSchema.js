@@ -11,10 +11,15 @@ const postSchema = new Schema({
     type: String,
     required: true,
   },
-  image: {
-    type: String,
-    require:true
+  text:{
+    type:String
   },
+  image: [
+    {
+      type:String,
+      require:true
+    }
+  ],
   category:[
     {
       type:String,
