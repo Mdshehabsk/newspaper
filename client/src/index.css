@@ -1,0 +1,23 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+*{
+    box-sizing: border-box;
+}
+img{
+    max-width: 100%;
+    max-height: 100%;
+}
+html{
+    font-size: 62.5%;
+}
+
+@layer components{
+   .google-btn{
+       @apply px-16 mt-4 !important;
+   }
+}
+
+
+

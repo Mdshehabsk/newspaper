@@ -1,0 +1,29 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@200;300;400;500;600&display=swap');
+
+*{
+    
+    font-family: 'Noto Sans Bengali', sans-serif;
+}
+html{
+    overflow-x: hidden;
+}
+body{
+    overflow-x: hidden;
+}
+.sidebar li {
+    padding: 1rem;
+    border-bottom: 1px solid #00000028;
+}
+.sidebar li a{
+    font-size: 1.8rem;
+}  
+
+
+.jodit-status-bar {
+    display: none !important;
+}
+
+.jodit-container{
+    font-size: 16px;
+}
+
