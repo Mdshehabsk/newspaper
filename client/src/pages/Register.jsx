@@ -9,6 +9,7 @@ import {env,backend_url} from "../components/env";
 import Input from "../components/Input";
 import RegisterVerify from "../components/RegisterVerify";
 const Register = () => {
+  axios.defaults.withCredentials = true
   const navigate = useNavigate();
   const [showVerify, setShowVerify] = useState(false);
   const [error, setError] = useState("");
@@ -28,7 +29,7 @@ const Register = () => {
   };
   const formSubmit = async (e) => {
     e.preventDefault();
-    const res = await axios.post("/api/v1/user/register", {name,email,password,cpassword});
+    const res = await axios.post(`${backend_url}/api/v1/user/register`, {name,email,password,cpassword});
     if (res.data.message) {
       setError(res.data.message);
     } else {
@@ -41,9 +42,8 @@ const Register = () => {
   const responseGoogle = async ({ profileObj }) => {
     const { name, email, googleId, imageUrl } = profileObj;
     const res = await axios.post(
-      "/api/v1/user/auth/google",
+      `${backend_url}/api/v1/user/auth/google`,
       { name, email, googleId, imageUrl },
-      { withCredentials: "true" }
     );
     if(res.status === 200){
       setTimeout(() => {
@@ -69,7 +69,7 @@ const Register = () => {
     console.log(response);
   };
   const verify = async ()  =>{
-    const res = await axios.post('/api/v1/user/registerVerification',{code},{withCredentials:true})
+    const res = await axios.post(`${backend_url}/api/v1/user/registerVerification`,{code})
     if(res.status === 201){
       setTimeout(() => {
         navigate("/login")

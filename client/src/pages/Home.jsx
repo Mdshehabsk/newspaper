@@ -6,13 +6,13 @@ import LoadingBar from 'react-top-loading-bar'
 import { backend_url } from '../components/env';
 import Item from '../components/Item'
 import toast,{Toaster} from 'react-hot-toast';
-const Home = (admin) => {
+const Home = ({admin}) => {
   const [progress,setProgress] = useState(0)
   const [dependency,setDependency] = useState(false)
   const navigate = useNavigate();
   const [data, setData] = useState(null)
   const apicall = async () => {
-    const res = await axios.get('/api/v1/post',{withCredentials:true})
+    const res = await axios.get(`${backend_url}/api/v1/post`,{withCredentials:true})
     if(res.status === 202){
       navigate('/login')
     }
@@ -23,7 +23,7 @@ const Home = (admin) => {
    } 
   }
   const deletePost = async (postId,setModalIsOpen) => {
-    const res = await axios.delete(`/api/v1/post/deletepost/${postId}`,{withCredentials:true})
+    const res = await axios.delete(`${backend_url}/api/v1/post/deletepost/${postId}`,{withCredentials:true})
     if(res.status===200){
       setModalIsOpen(false)
       setDependency(true)

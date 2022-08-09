@@ -10,7 +10,7 @@ const Profile = () => {
   const [user,setUser] = useState([])
   // const navigate = useNavigate()
   const logoutFunc = async () => {
-    const res = await axios.get("/api/v1/user/logout", {
+    const res = await axios.get(`${backend_url}/api/v1/user/logout`, {
       withCredentials: true,
     });
     if (res.status === 200) {
@@ -18,7 +18,7 @@ const Profile = () => {
     }
   };
   const apicall = async () => {
-    const res = await axios.get('/api/v1/user', {withCredentials: true})
+    const res = await axios.get(`${backend_url}/api/v1/user`, {withCredentials: true})
     setUser(res.data)
   };
   useEffect(()=>{

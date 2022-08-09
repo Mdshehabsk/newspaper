@@ -23,7 +23,7 @@ const Navbar = () => {
     setShowSearch(!showSearch);
   };
   const apicall = async () => {
-    const res = await axios.get('/api/v1/user',{withCredentials:'true'})
+    const res = await axios.get(`${backend_url}/api/v1/user`,{withCredentials:'true'})
     const {imageUrl,user} = res.data
     setData({imageUrl,user})
   }

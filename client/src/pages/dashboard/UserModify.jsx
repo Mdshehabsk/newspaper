@@ -1,9 +1,10 @@
-import axios from "axios";
+import axios  from "axios";
 import React, { useState } from "react";
 import { useEffect } from "react";
 import { backend_url } from "../../components/env";
 import toast,{Toaster} from "react-hot-toast";
 const UserModify = () => {
+  axios.defaults.withCredentials = true
   const [role,setRole] = useState('')
   const [userSearch, setUserSearch] = useState("");
   const [user, setUser] = useState("");
@@ -11,13 +12,13 @@ const UserModify = () => {
     setUserSearch(e.target.value);
   };
   const userSearchApi = async () => {
-    const res = await axios.get("/api/v1/user/userSearch/", {
+    const res = await axios.get(`${backend_url}/api/v1/user/userSearch/`, {
       params: { email: userSearch },
     });
     setUser(res.data);
   };
   const userModify = async id => {
-    const res = await axios.post('/api/v1/user/usermodify/'+id,{role})
+    const res = await axios.post(`${backend_url}/api/v1/user/usermodify/${id}`,{role})
     const bg = res.status === 200 ? "#22b33c" : "red";
     toast(res.data.message, {
       duration: 3000,
@@ -37,6 +38,7 @@ const UserModify = () => {
       },
     });
   }
+  // console.log(user)
   useEffect(() => {
     userSearchApi();
   }, [userSearch]);
@@ -57,7 +59,7 @@ const UserModify = () => {
         {user && (
           <div className="flex items-center space-x-8 w-full md:w-8/12 mx-auto mt-8 h-20 px-4 rounded-md bg-slate-200  ">
             <img
-              src={`/${user.imageUrl}`}
+              src={`${backend_url}/${user.imageUrl}`}
               alt=""
               className="rounded-full w-16 h-16  "
             />

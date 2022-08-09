@@ -8,11 +8,11 @@ const SinglePost = () => {
   const [categoryPost,setCategoryPost] = useState('')
     const {category,postid} = useParams()
     const SinglePostApicall = async () => {
-      const res = await axios.get(`/api/v1/post/${category}/singlepost/${postid}`)
+      const res = await axios.get(`${backend_url}/api/v1/post/${category}/singlepost/${postid}`)
       setSinglepost(res.data)
     }
     const categoryPostApicall = async () => {
-      const res = await axios.get(`/api/v1/post/${category}`)
+      const res = await axios.get(`${backend_url}/api/v1/post/${category}`)
       setCategoryPost(res.data)
     }
     useEffect(()=>{

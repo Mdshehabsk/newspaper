@@ -26,7 +26,7 @@ const EditProfile = ({ user, apicall }) => {
         // Custom Icon
       });
     }
-    const res = await axios.put("/api/v1/user/profile/update", formData, {
+    const res = await axios.put(`${backend_url}/api/v1/user/profile/update`, formData, {
       withCredentials: true,
     });
     if (res.status === 200) {

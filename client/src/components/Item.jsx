@@ -6,8 +6,8 @@ import { Link } from "react-router-dom";
 // moment().locale('bn-bd')
 import img from '../img/img.jpg'
 import Modal from './Modal'
+import { backend_url } from "./env";
 const Item = ( {title,description,image,unique,category,createdAt,_id,deletePost,admin} ) => {
-  console.log(admin.admin)
  const [modalIsOpen,setModalIsOpen] = useState(false)
   return (
     <>
@@ -15,7 +15,7 @@ const Item = ( {title,description,image,unique,category,createdAt,_id,deletePost
       <div className="item relative  h-[30rem] py-2 px-4 flex flex-col justify-center shadow-lg overflow-y-hidden cursor-pointer ">
          
           <Link  to={`/${category[Math.floor(Math.random() * category.length)]}/singlepost/${_id}`}  >
-          <img src={image ? `${image[0]}`: img} alt="no image" className="h-2/4 w-full object-cover " />
+          <img src={image ? `${backend_url}${image[0]}`: img} alt="no image" className="h-2/4 w-full object-cover " />
           
           <div className="title mt-2 ">
               <h2 className="text-3xl font-bold" > {title.substring(0,50)}...</h2>
@@ -28,7 +28,7 @@ const Item = ( {title,description,image,unique,category,createdAt,_id,deletePost
           </div>
           </Link>
           {
-            admin.admin ? <IoMdMore className="text-4xl absolute right-0 bottom-4" onClick={()=>setModalIsOpen(true)} /> : null
+            admin ? <IoMdMore className="text-4xl absolute right-0 bottom-4" onClick={()=>setModalIsOpen(true)} /> : null
           }
           <Modal isOpen={modalIsOpen} setModalIsOpen={setModalIsOpen} postId={_id} deletePost={deletePost} > </Modal>
       </div>

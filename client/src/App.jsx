@@ -20,7 +20,7 @@ function App() {
   const [user, setUser] = useState(false);
   const [admin,setAdmin] = useState(false);
   const apicall = async () => {
-    const res = await axios.get("/api/v1/roleauth", { withCredentials: true });
+    const res = await axios.get(`${backend_url}/api/v1/roleauth`, { withCredentials: true });
     setUser(res.data.user);
     setAdmin(res.data.dashboard);
   }
@@ -36,7 +36,7 @@ function App() {
         <Route path="/register" element={<Register />} />
         {!user ? <Route path="/forgetPassword" element={<ForgetPassword />} /> : null }
         {admin ? <Route path="/dashboard/*" element={<Dashboard />} /> : null }
-        <Route path='/:category' element={<CategoryPost/>} />
+        <Route path='/:category' element={<CategoryPost admin={admin} />} />
         <Route path='/:category/singlepost/:postid' element={<SinglePost/>} />
         <Route path="*" element={<NotFound />} />
       </Routes>

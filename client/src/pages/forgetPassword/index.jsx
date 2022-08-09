@@ -25,7 +25,7 @@ const ForgetPassword = () => {
   };
   const formSubmit = async (e) => {
     e.preventDefault();
-    const res = await axios.post("/api/v1/user/forgetPassword", {email}, {withCredentials: true});
+    const res = await axios.post(`${backend_url}/api/v1/user/forgetPassword`, {email}, {withCredentials: true});
     if (res.data.message) {
       setError(res.data.message);
     } else {
@@ -36,7 +36,7 @@ const ForgetPassword = () => {
     }
   };
   const resetPassword = async () => {
-    const res = await axios.post("/api/v1/user/resetpassword", {password,cpassword,code},{withCredentials:true});
+    const res = await axios.post(`${backend_url}/api/v1/user/resetpassword`, {password,cpassword,code},{withCredentials:true});
     if(res.status === 201){
       setTimeout(() => {
         navigate("/login")

@@ -24,7 +24,7 @@ const Login = () => {
   };
   const formSubmit = async (e) => {
     e.preventDefault();
-    const res = await axios.post("/api/v1/user/login", value, {
+    const res = await axios.post(`${backend_url}/api/v1/user/login`, value, {
       withCredentials: true,
     });
     setError(res.data.message);
@@ -36,7 +36,7 @@ const Login = () => {
   const responseGoogle = async ({ profileObj }) => {
     const { name, email, googleId, imageUrl } = profileObj;
     const res = await axios.post(
-      "/api/v1/user/auth/google",
+      `${backend_url}/api/v1/user/auth/google`,
       { name, email, googleId, imageUrl },
       { withCredentials: "true" }
     );

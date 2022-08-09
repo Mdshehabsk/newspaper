@@ -47,6 +47,7 @@ const registerController = async (req, res, next) => {
 const registerVerification = async (req, res, next) => {
   try {
     const { code } = req.body;
+    console.log(req.session)
     const { name, email, password, cpassword, randomNumber } = req.session.user;
     if (code == randomNumber) {
       const user = new User({

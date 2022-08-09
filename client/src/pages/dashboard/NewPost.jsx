@@ -1,6 +1,6 @@
 import axios from "axios";
 import JoditEditor from "jodit-react";
-import { useRef, useState,useMemo } from "react";
+import { useRef, useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
 import Checkbox from "../../components/Checkbox";
 import { backend_url } from "../../components/env";
@@ -26,7 +26,7 @@ const NewPost = () => {
     for(const i in file) {
       ImageForm.append('postImage',file[i])
     }
-    const res = await axios.post('/api/v1/post/postimage',ImageForm)
+    const res = await axios.post(`${backend_url}/api/v1/post/postimage`,ImageForm)
     setShowImage(res.data.image)
   };
 
@@ -51,7 +51,7 @@ const NewPost = () => {
     formData.append('text',text)
     formData.append('postImage',showImage)
     formData.append("category", check.checkedArr);
-    const res = await axios.post("/api/v1/post/news", formData, {
+    const res = await axios.post(`${backend_url}/api/v1/post/news`, formData, {
       withCredentials: true,
     });
     const bg = res.status === 200 ? "#22b33c" : "red";
